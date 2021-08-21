@@ -134,10 +134,9 @@ bot.onText(/\/lineas/, function(message, match){
     })
 });
 
-bot.onText(/\/ek0<<7/, function(message, match){
+bot.onText(/\/ejecucion/, function(msg, match){
     //  let plan = match[1];
-    let chatId= message.chat.id; 
-   
+    let chatId= msg.chat.id; 
     request(`https://sse-pdm.herokuapp.com/pa/api/avancefinanciero`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b>Finanzas Proyectos de Inversión</b>", {parse_mode:"HTML"})
@@ -173,6 +172,8 @@ bot.onText(/\/ek0<<7/, function(message, match){
             } )
          }
     })
+
+    
 });
 
 
@@ -202,6 +203,7 @@ bot.on('message', (msg) => {
         })
         
     }
+
     var cumple = "Cumplimiento";
     if (msg.text.indexOf(cumple) === 0) {
         bot.sendMessage(msg.chat.id, "<b style='color:red'>Cumplimiento</b>", {parse_mode:"HTML"});
@@ -227,10 +229,9 @@ bot.on('message', (msg) => {
         })
     }
 
-  
     var linea = "Lineas";
     if (msg.text.indexOf(linea) ===0 ) {
-        bot.sendMessage(msg.chat.id, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"});
+        bot.sendMessage(msg.chat.id, "<b style='color:red'>Avance Líneas</b>", {parse_mode:"HTML"});
 
         let chatId= msg.chat.id; 
         request(`https://sse-pdm.herokuapp.com/pi/api/total-avance-lineas`, function(error, response,body){
@@ -285,43 +286,185 @@ bot.on('message', (msg) => {
         })
 
     }
+
+    var ejecucion = "Ejecución";
+    if (msg.text.indexOf(ejecucion) ===0 ) {
+        bot.sendMessage(msg.chat.id, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"});
+        let chatId= msg.chat.id; 
+        request(`https://sse-pdm.herokuapp.com/pa/api/avancefinanciero`, function(error, response,body){
+            if(!error && response.statusCode==200){
+                bot.sendMessage(chatId, "<b>Finanzas Proyectos de Inversión</b>", {parse_mode:"HTML"})
+                .then(function(msg){
+                    var res=JSON.parse(body);
+                    
+                       let poai =((res.data[0].poai))
+                       let pptoajustado=(((res.data[0].pptoajustado)))
+                       let pptoejecutado=(((res.data[0].pptoejecutado)))
+                       let compromisos=(((res.data[0].compromisos)))
+                       let disponible=(((res.data[0].disponible)))
+                       let ordenado=(((res.data[0].ordenado)))
+                       let porc_ejecutado= ((parseFloat(pptoejecutado)/parseFloat(pptoajustado))*100).toFixed(2)
+                       let total=(((res.data[0].total)))
+    
+                       //let avancelinea= (res.data[index].avance_linea).substr(0,5)
+                       //ordenar.push([avancelinea])
+                      bot.sendMessage(chatId,   ' \nPOAI <strong>'+formatter.format(poai)+'</strong>'
+                                                +'\nPpto. Ajustado <strong> '+formatter.format(pptoajustado)+'</strong>'
+                                                +'\nPpto. Ejecutado <strong> '+formatter.format(pptoejecutado)+'</strong>'
+                                                +'\nCompromisos <strong> '+formatter.format(compromisos)+'</strong>'
+                                                +'\nDisponibles <strong> '+formatter.format(disponible)+'</strong>'
+                                                +'\nOrdenado <strong> '+formatter.format(ordenado)+'</strong>'
+                                                +'\n---------------------'
+                                                +'\nTotal <strong> '+formatter.format(total)+'</strong>'
+                                                +'\n%Ejecución <strong> '+porc_ejecutado+'%</strong>'
+                                                +'\n(cifras en millones de pesos)'
+                                             
+                                                ,{parse_mode:'HTML'})
+                  
+                   
+                    
+                } )
+             }
+        })
+
+    }
+   var alertas = "Alertas";
+    if (msg.text.indexOf(alertas) ===0 ) {
+        bot.sendMessage(msg.chat.id, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"});
+        let chatId= msg.chat.id; 
+        avancealertas(chatId)
+    }
 });
 
-bot.onText(/\/ejecucionlinea (.+)/, (msg, match) => {
+bot.onText(/\/ejecutadolinea (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1]; // the captured "whatever"
     let linea = parseInt(resp)
-    request(`https://sse-pdm.herokuapp.com/pi/api/line/financiera/${resp}`, function(error, response,body){
-        if(!error && response.statusCode==200){
-           
-                bot.sendMessage(chatId, "<b>Finanzas Línea: </b>"+resp, {parse_mode:"HTML"})
-                .then(function(msg){
-                    var res=JSON.parse(body);
-                    if(res.data[0].pptoajustado != null){
-                        let por_ejec=(parseFloat(res.data[0].ejecutado)/parseFloat(res.data[0].pptoajustado)*100)
-                        bot.sendMessage(chatId,  '\nPpto Ajustado <strong> '+ formatter.format(res.data[0].pptoajustado)+'</strong>'+ '\nppto Ejecutado <strong> '+formatter.format(res.data[0].ejecutado)+ '</strong>'+'\n%Ejecución Línea <strong> '+(por_ejec).toFixed(2)+'%</strong>', {parse_mode:'HTML'}) 
-                        //bot.sendMessage(chatId, 'hola '+body);
-                    }else{
-                        bot.sendMessage(chatId, "<b>La Línea no existe en este Plan</b>", {parse_mode:"HTML"})
-                    }
-                 
-                } )
-           
-           //    
-           
-           
-         }
-     })
+    ejecucionlinea(linea, chatId, resp)
+  
 });
+
+bot.onText(/\/indicador (.+)/, (msg, match) => {
+  
+
+    try {
+        const chatId = msg.chat.id;
+        const resp = match[1]; // the captured "whatever"
+       
+        bot.sendMessage(msg.chat.id, "<b style='color:red'>Avance Indicador</b>", {parse_mode:"HTML"});
+        request(`https://sse-pdm.herokuapp.com/bot/api/indicador/${resp}`, function(error, response,body){
+            if(!error && response.statusCode==200){
+                bot.sendMessage(chatId, "<b>Resultado Indicador: </b>"+resp, {parse_mode:"HTML"})
+                    .then(function(msg){
+                        var res=JSON.parse(body);
+                        var alerta=''
+                        if(res.data[0].avance_cuatrienio != null){
+                            let avanceIndicador= (parseFloat(res.data[0].avance_cuatrienio)*100).toFixed(2)
+                            if(res.data[0].semafav==1){ alerta='🔴'}else if(res.data[0].semafav==3){alerta='🟢'}else if(es.data[0].semafav==2){alerta='🟠'}else{alerta='🔵'}
+                            bot.sendMessage(chatId, 
+                         
+                                '\nIndicador <strong> '+res.data[0].nom_indicador+ '</strong>'
+                               
+                                +'\n<strong>Definición:</strong>\n '+res.data[0].defincion
+                                +'\nMeta Plan <strong> '+res.data[0].meta_plan+'</strong>'
+                                +'\nUnidad<strong> '+res.data[0].unidad+'</strong>'
+                                +'\nLB<strong> '+res.data[0].lb_ind+'</strong>'
+                                +'\nResponsable<strong> '+res.data[0].responsable_plan+'</strong>'
+                                +'\nObs. Seguimiento<strong> '+res.data[0].observaciones+'</strong>'
+                                +'\nAvance Indicador <strong> '+avanceIndicador+'%</strong>'
+                                +'\nDesempeño <strong> '+alerta+'</strong>'
+
+                                //+'\n%Ejecución Línea <strong> '+(por_ejec).toFixed(2)+'%</strong>'
+                                , {parse_mode:'HTML'}) 
+                            
+                        }else{
+                            bot.sendMessage(chatId, "<b>El Indicador no existe en este Plan</b>", {parse_mode:"HTML"})
+                        }
+                    } )
+               
+             }
+         })
+
+         
+    } catch (error) {
+        console.error('Error :', error);
+        
+    }
+  
+});
+
+
+async function ejecucionlinea (linea, chatId, resp){
+    try {
+
+        request(`https://sse-pdm.herokuapp.com/pi/api/line/financiera/${linea}`, function(error, response,body){
+            if(!error && response.statusCode==200){
+               
+                    bot.sendMessage(chatId, "<b>Finanzas Línea: </b>"+resp, {parse_mode:"HTML"})
+                    .then(function(msg){
+                        var res=JSON.parse(body);
+                        if(res.data[0].pptoajustado != null){
+                            let por_ejec=(parseFloat(res.data[0].ejecutado)/parseFloat(res.data[0].pptoajustado)*100)
+                            bot.sendMessage(chatId,  '\nPpto Ajustado <strong> '+ formatter.format(res.data[0].pptoajustado)+'</strong>'+ '\nppto Ejecutado <strong> '+formatter.format(res.data[0].ejecutado)+ '</strong>'+'\n%Ejecución Línea <strong> '+(por_ejec).toFixed(2)+'%</strong>', {parse_mode:'HTML'}) 
+                            //bot.sendMessage(chatId, 'hola '+body);
+                        }else{
+                            bot.sendMessage(chatId, "<b>La Línea no existe en este Plan</b>", {parse_mode:"HTML"})
+                        }
+                    } )
+               
+             }
+         })
+    } catch (error) {
+        console.error('Error :', error);
+        
+    }
+  
+}
+
+async function avancealertas(chatId){
+    try {
+        request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
+            if(!error && response.statusCode==200){
+               let ordenar=[]
+                    bot.sendMessage(chatId, "<b>Alerta Avances Dep: </b>" , {parse_mode:"HTML"})
+                    .then(function(msg){
+                        var res=JSON.parse(body);
+                        var icono=""
+                        var avance=0
+                        for (let index = 0; index < res.data.length; index++) {
+                            avance= (parseFloat(res.data[index].avance)).toFixed(2)
+                            console.log(avance);
+                            if(avance<=22.50){icono='🔴'}else if (avance>=33.75){icono='🟢'} else {icono='🟠'}    
+                            ordenar.push({
+                                "cod_dep": res.data[index].cod_dep,
+                                "nombre":res.data[index].nom_cortp,
+                                "avance": avance,
+                                "pic": icono 
+                            })
+                            ordenar.sort((a, b) =>  b.avance-a.avance )     
+                        }
+                      
+                        for (let index = 0; index < ordenar.length; index++) {
+                            if (ordenar[index].avance>0) {
+                                bot.sendMessage(chatId,
+                                '\nDep <strong> '+ordenar[index].nombre+'</strong>'
+                                +'\nAvance <strong> '+ordenar[index].avance+'%</strong>'
+                                +'\nEstado <strong> '+ordenar[index].pic+'</strong>'
+                                ,{parse_mode:'HTML'})                       
+                            }
+                        }
+            } )
+        }
+    })
+    } catch (error) {console.error('Error: ', error);}
+}
 
 
 
 // Listening
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-});
 
+app.listen((process.env.PORT || 9510), function(){ console.log(`listening on * : ${process.env.PORT}`); }); 
 
     
 
-        
+    
