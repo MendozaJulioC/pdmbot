@@ -61,14 +61,10 @@ const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2
 })
 
-
-
-
 liveReloadServer.server.once("connection",()=>{
         setTimeout(()=>{liveReloadServer.refresh("/")
     }, 3000)
 })
-
 
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Bienvenidos a la Medellín Futuro", {
@@ -473,6 +469,7 @@ async function avancealertas(chatId){
         request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                let ordenar=[]
+               
                     bot.sendMessage(chatId, "<b>Alerta Avances Dep: </b>" , {parse_mode:"HTML"})
                     .then(function(msg){
                         var res=JSON.parse(body);
@@ -493,14 +490,30 @@ async function avancealertas(chatId){
                       
                         for (let index = 0; index < ordenar.length; index++) {
                             if (ordenar[index].avance>0) {
+                                /*
                                 bot.sendMessage(chatId,
                                 '\nDep <strong> '+ordenar[index].nombre+'</strong>'
                                 +'\nAvance <strong> '+ordenar[index].avance+'%</strong>'
                                 +'\nEstado <strong> '+ordenar[index].pic+'</strong>'
-                                ,{parse_mode:'HTML'})                       
+                                ,{parse_mode:'HTML'})                       */
+                                bot.sendMessage(chat.id, "Bienvenidos a la Medellín Futuro", {
+                                    "reply_markup":
+                                    {
+                                        "keyboard": 
+                                        [
+                                            ["Alto"   , "Medio", "Bajo"]
+                                          
+                                           ,
+                                        ]
+                                    }
+                                });
                             }
                         }
-            } )
+                    } )
+
+
+          
+
         }
     })
     } catch (error) {console.error('Error: ', error);}
