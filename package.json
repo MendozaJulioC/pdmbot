@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev":  "nodemon bot.js",
-    "start":"node bot.js"
+    "dev": "    nodemon src/index.js",
+    "start": "  cross-env NODE_ENV=production  node src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,9 +13,14 @@
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "connect-livereload": "^0.6.1",
     "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "node-telegram-bot-api": "^0.54.0"
+    "livereload": "^0.9.3",
+    "morgan": "^1.10.0",
+    "node-telegram-bot-api": "^0.54.0",
+    "reload": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

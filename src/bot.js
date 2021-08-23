@@ -1,13 +1,51 @@
 require('dotenv').config();
 const express=require('express');
 const app = express();
-const port= process.env.PORT;
+const http = require('http')
+const reload= require('reload')
+//const port= process.env.PORT;
+
 const TelegramBot = require('node-telegram-bot-api');
 const token = process.env.token
+const EventEmitter = require('events');
+const path = require('path');
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs' );
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
+
+
+const emitter = new EventEmitter();
+emitter.once('log', () => console.log('log once'));
+const listeners = emitter.rawListeners('log');
+const logFnWrapper = listeners[0];
+logFnWrapper.listener();
+logFnWrapper();
+
+emitter.on('log', () => console.log('log persistently'));
+const newListeners = emitter.rawListeners('log');
+newListeners[0]();
+emitter.setMaxListeners(0)
+emitter.emit('log');
 process.env.NTBA_FIX_319 = 1;
+
+var livereload = require('livereload');
+var liveReloadServer = livereload.createServer();
+liveReloadServer.watch(__dirname + "/public");
+
+const  connectLiveReloadServer  = require('connect-livereload');
+app.use(connectLiveReloadServer());
+
 
 const bot = new TelegramBot(token, {polling: true});
 bot.on("polling_error", console.log);
+
 
 /*
 bot.on('message', (message) => {
@@ -22,6 +60,15 @@ const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
     minimumFractionDigits: 2
 })
+
+
+
+
+liveReloadServer.server.once("connection",()=>{
+        setTimeout(()=>{liveReloadServer.refresh("/")
+    }, 3000)
+})
+
 
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Bienvenidos a la Medellín Futuro", {
@@ -433,7 +480,7 @@ async function avancealertas(chatId){
                         var avance=0
                         for (let index = 0; index < res.data.length; index++) {
                             avance= (parseFloat(res.data[index].avance)).toFixed(2)
-                            console.log(avance);
+                            //console.log(avance);
                             if(avance<=22.50){icono='🔴'}else if (avance>=33.75){icono='🟢'} else {icono='🟠'}    
                             ordenar.push({
                                 "cod_dep": res.data[index].cod_dep,
@@ -459,12 +506,16 @@ async function avancealertas(chatId){
     } catch (error) {console.error('Error: ', error);}
 }
 
+ 
 
 
+
+module.exports =app;
 // Listening
 
-app.listen((process.env.PORT || 9510), function(){ console.log(`listening on * : ${process.env.PORT}`); }); 
-
-    
+const server = http.createServer(app)
+server.listen(process.env.PORT||7800,()=>console.log('Servidor activo...'))
+reload(app)
+  
 
     
