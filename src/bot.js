@@ -78,7 +78,21 @@ bot.onText(/\/start/, (msg) => {
             ]
         }
     });
+  
+    onPhotoText(msg)
+    
  }
+
+  function onPhotoText(msg) {
+    // From file path
+    const photo = `${__dirname}/res/guia.jpg`;
+    bot.sendPhoto(msg.chat.id, photo, {
+      caption: "Hola!!!"
+    });
+  };
+
+
+
  
 var request= require('request')
  bot.onText(/\/avance/, function(message, match){
@@ -810,6 +824,76 @@ bot.onText(/\/invercomuna (.+)/, (msg, match) => {
         
     }
 });
+
+bot.onText(/\/dependencia (.+)/, (msg, match) => { 
+    try {
+        const chatId = msg.chat.id;
+        const resp = match[1]; // the captured "whatever"
+       let avancedep=0; let icono='';
+       let porc_fisico=0; let porc_ejecucion=0;let noprg=0;
+        request(`https://sse-pdm.herokuapp.com/bot/api/dependencias/${resp}`, function(error, response,body){
+            if(!error && response.statusCode==200){
+                bot.sendMessage(chatId, "Resultado", {parse_mode:"HTML"})
+                .then(function(msg){
+                    var res=JSON.parse(body);
+                    if(res.data[0].nombre_dependencia != null){
+                        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>"+ '\nDependencia: <strong>'+(res.data[0].nombre_dependencia)+'</strong>', {parse_mode:"HTML"});   
+                        
+                       avancedep= ((parseFloat(res.data[0].avanceplan))*100).toFixed(3)
+                       porc_fisico=((parseFloat(res.data[0].por_ejec_fisicadep))*100).toFixed(3)
+                       porc_ejecucion= ((parseFloat(res.data[0].porc_ejec_finandep))*100).toFixed(3)
+                       if(res.data[0].num_ind_noprgdep == null){ noprg=0} else { noprg=res.data[0].num_ind_noprgdep}
+                        if (avancedep>=33.75){icono='🟢'}else if((avancedep<=22.50)){ (icono='🔴')}else {icono='🟠'}
+                        console.log(avancedep);
+                       bot.sendMessage(chatId, 
+                            '\n% Avance Cuatrenial PDM <strong> '+avancedep+'%\nDesempeño:  '+icono+'</strong>'
+                            +'\n% Ejecución Física <strong> '+(porc_fisico)+'%</strong>'
+                            +'\n% Ejecución Financiera <strong> '+(porc_ejecucion)+'%</strong>'
+                            +'\n<strong>***********************************</strong>'
+                            +'\n<strong>Indicadores de Producto</strong>'
+                            +'\n<strong>***********************************</strong>'
+                            +'\nIndicadores No Programados: <strong> '+(noprg)+'</strong>'
+                         
+                            +'\nIndicadores Desempeño Bajo : <strong> '+(res.data[0].num_ind_bajodep)+'</strong>'
+                            +'\nIndicadores Desempeño Medio : <strong> '+(res.data[0].num_ind_mediodep)+'</strong>'
+                            +'\nIndicadores Desempeño Alto : <strong> '+(res.data[0].num_ind_altodep)+'</strong>'
+
+                            +'\n<strong>***********************************</strong>'
+                            +'\n<strong>Proyectos</strong>'
+                            +'\n<strong>***********************************</strong>'
+                            +'\nProyectos Iniciativa Institucional: <strong> '+(res.data[0].num_proy_iidep)+'</strong>'
+                            +'\n Proyectos Presupuesto Participativo: <strong> '+(res.data[0].num_proy_ppdep)+'</strong>'
+                            +'\nProyectos Saldos no ejecutables: <strong> '+(res.data[0].num_proy_saldonoejecdep)+'</strong>'
+                            +'\nProyectos Ejecución saldos pendientes: <strong> '+(res.data[0].num_proy_ejecsaldpenddep)+'</strong>'
+
+                            +'\n<strong>***********************************</strong>'
+                            +'\n<strong>Inversión</strong>'
+                            +'\n<strong>***********************************</strong>'
+
+                            +'\nPOAI: <strong> '+formatter.format(res.data[0].poaidep)+'</strong>'
+                            +'\nPpto. Ajustado: <strong> '+formatter.format(res.data[0].pptoajustadodep)+'</strong>'
+                            +'\nPpto. Ejecutado: <strong> '+formatter.format(res.data[0].ejecuciondep)+'</strong>'
+
+
+                            +'\nInversión Localizada: <strong> '+formatter.format(res.data[0].inver_localizadadep)+'</strong>'
+                            +'\nInversión PP: <strong> '+formatter.format(res.data[0].inver_ppdep)+'</strong>'
+                            +'\nInversión Ciudad: <strong> '+formatter.format(res.data[0].inver_ciudaddep)+'</strong>'
+                            +'\nFortalecimiento Inst.: <strong> '+formatter.format(res.data[0].fort_instdep)+'</strong>'
+
+                            //+'\nTotal: <strong> '+formatter.format(res.data[0].total)+'</strong>'
+                           , {parse_mode:'HTML'}) 
+                        }else{
+                            bot.sendMessage(chatId, "<b>Código de Dependencia no encontrado</b>", {parse_mode:"HTML"})
+                        }
+                    } )
+                }
+            })
+    } catch (error) {
+        console.error('Error :', error);
+        
+    }
+});
+
 
 
 
