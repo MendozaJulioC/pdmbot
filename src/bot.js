@@ -562,7 +562,7 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
                         var alerta=''
                         if(res.data[0].avance_cuatrienio != null){
                             let avanceIndicador= (parseFloat(res.data[0].avance_cuatrienio)*100).toFixed(2)
-                            if(res.data[0].semafav==1){ alerta='🔴'}else if(res.data[0].semafav==3){alerta='🟢'}else if(es.data[0].semafav==2){alerta='🟠'}else{alerta='🔵'}
+                            if(res.data[0].semafav==1){ alerta='🔴'}else if(res.data[0].semafav==3){alerta='🟢'}else if(res.data[0].semafav==2){alerta='🟠'}else{alerta='🔵'}
                             bot.sendMessage(chatId, 
                                 '\nIndicador <strong> '+res.data[0].nom_indicador+ '</strong>'
                                 +'\n<strong>Definición:</strong>\n '+res.data[0].defincion
