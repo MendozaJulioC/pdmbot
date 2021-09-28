@@ -169,7 +169,7 @@ bot.onText(/\/proyeccion/, function(message, match){
 bot.onText(/\/lineas/, function(message, match){
     //  let plan = match[1];
     let chatId= message.chat.id; 
-    bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+    bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
     request(`https://sse-pdm.herokuapp.com/pi/api/total-avance-lineas`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b>Lineas PDM</b>", {parse_mode:"HTML"})
@@ -312,7 +312,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.chat.id, "<b style='color:red'>Avance Líneas</b>", {parse_mode:"HTML"});
         let chatId= msg.chat.id; 
         request(`https://sse-pdm.herokuapp.com/pi/api/total-avance-lineas`, function(error, response,body){
-            if(!error && response.statusCode==200){ bot.sendMessage(chatId, "<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"})
+            if(!error && response.statusCode==200){ bot.sendMessage(chatId, "<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"})
                 .then(function(msg){
                     var res=JSON.parse(body);
                     var ordenar=[]; let nombre=[];let codigo=[];
@@ -365,7 +365,7 @@ bot.on('message', (msg) => {
     var ejecucion = "Ejecución";
     if (msg.text.indexOf(ejecucion) ===0 ) {
         bot.sendMessage(msg.chat.id, "<b>Resultados</b>", {parse_mode:"HTML"});
-        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
         let chatId= msg.chat.id; 
         request(`https://sse-pdm.herokuapp.com/pa/api/avancefinanciero`, function(error, response,body){
             if(!error && response.statusCode==200){
@@ -408,7 +408,7 @@ bot.on('message', (msg) => {
     var alertas = "Alertas";
     if (msg.text.indexOf(alertas) ===0 ) {
         bot.sendMessage(msg.chat.id, "<b>Resultados</b>", {parse_mode:"HTML"});
-        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
         let chatId= msg.chat.id; 
         avancealertas(chatId)
     }
@@ -417,7 +417,7 @@ bot.on('message', (msg) => {
     const chatId = msg.chat.id;
     if (msg.text.indexOf(alto)===0) {
         bot.sendMessage(msg.chat.id,"<b>Dependencias Desempeño Alto </b>", {parse_mode:"HTML"});  
-        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
         request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                let ordenaralto=[]
@@ -454,7 +454,7 @@ bot.on('message', (msg) => {
     var medio="Medio";
     if (msg.text.indexOf(medio)===0) {
         bot.sendMessage(msg.chat.id,"<b>Dependencias Desempeño Medio </b>", {parse_mode:"HTML"});
-        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
         request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                 let ordenarmedio=[]
@@ -467,7 +467,7 @@ bot.on('message', (msg) => {
                         avance= (parseFloat(res.data[index].avance)).toFixed(2)
                         //console.log(avance);
                         /*if(avance<=22.50){icono='🔴'}else*/ 
-                        if ((avance>22.50) &&( avance < 33.75) )
+                        if ((avance>25.00) &&( avance < 37.5) )
                         {
                             ordenarmedio.push({
                                 "cod_dep": res.data[index].cod_dep,
@@ -506,7 +506,7 @@ bot.on('message', (msg) => {
                     for (let index = 0; index < res.data.length; index++) {
                         avance= (parseFloat(res.data[index].avance)).toFixed(2)
                         //console.log(avance);
-                        if(avance<=22.50){
+                        if(avance<=25.00){
                             ordenarbajo.push({
                                 "cod_dep": res.data[index].cod_dep,
                                 "nombre":res.data[index].nom_cortp,
@@ -540,7 +540,7 @@ bot.onText(/\/ejecutadolinea (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1]; // the captured "whatever"
     let linea = parseInt(resp)
-    bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>", {parse_mode:"HTML"});   
+    bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>", {parse_mode:"HTML"});   
     ejecucionlinea(linea, chatId, resp)
   
 });
@@ -553,7 +553,7 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
         const resp = match[1]; // the captured "whatever"
        
         bot.sendMessage(msg.chat.id, "<b >Avance Indicador</b>", {parse_mode:"HTML"});
-        bot.sendMessage(msg.chat.id, "<b >Corte JUN-30-2021 </b>", {parse_mode:"HTML"});
+        bot.sendMessage(msg.chat.id, "<b >Corte Ago-31-2021 </b>", {parse_mode:"HTML"});
         request(`https://sse-pdm.herokuapp.com/bot/api/indicador/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultado Indicador: </b>"+resp, {parse_mode:"HTML"})
@@ -753,7 +753,7 @@ bot.onText(/\/geoinversion/, function(msg, match){
     let chatId= msg.chat.id; 
     request(`https://sse-pdm.herokuapp.com/geo/api/territorio`, function(error, response,body){
         if(!error && response.statusCode==200){
-            bot.sendMessage(chatId, "<b>Inversión Pública en el Territorio</b>\nCorte Junio 30 de 2021", {parse_mode:"HTML"})
+            bot.sendMessage(chatId, "<b>Inversión Pública en el Territorio</b>\nCorte Agosto 31 de 2021", {parse_mode:"HTML"})
             .then(function(msg){
                 var res=JSON.parse(body);
                 if(!error && response.statusCode==200){
@@ -806,7 +806,7 @@ bot.onText(/\/invercomuna (.+)/, (msg, match) => {
                 .then(function(msg){
                     var res=JSON.parse(body);
                     if(res.data[0].cod_comuna != null){
-                        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>"+ '\nInversión <strong> '+(res.data[0].nom_comuna)+ '</strong>', {parse_mode:"HTML"});   
+                        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>"+ '\nInversión <strong> '+(res.data[0].nom_comuna)+ '</strong>', {parse_mode:"HTML"});   
                         bot.sendMessage(chatId, 
                             '\nInversión Localizada <strong> '+formatter.format(res.data[0].localizada)+ '</strong>'
                             +'\nInversión de Ciudad: <strong> '+formatter.format(res.data[0].ciudad)+'</strong>'
@@ -837,13 +837,13 @@ bot.onText(/\/dependencia (.+)/, (msg, match) => {
                 .then(function(msg){
                     var res=JSON.parse(body);
                     if(res.data[0].nombre_dependencia != null){
-                        bot.sendMessage(msg.chat.id,"<b>Corte Jun-30-2021 </b>"+ '\nDependencia: <strong>'+(res.data[0].nombre_dependencia)+'</strong>', {parse_mode:"HTML"});   
+                        bot.sendMessage(msg.chat.id,"<b>Corte Ago-31-2021 </b>"+ '\nDependencia: <strong>'+(res.data[0].nombre_dependencia)+'</strong>', {parse_mode:"HTML"});   
                         
                        avancedep= ((parseFloat(res.data[0].avanceplan))*100).toFixed(3)
                        porc_fisico=((parseFloat(res.data[0].por_ejec_fisicadep))*100).toFixed(3)
                        porc_ejecucion= ((parseFloat(res.data[0].porc_ejec_finandep))*100).toFixed(3)
                        if(res.data[0].num_ind_noprgdep == null){ noprg=0} else { noprg=res.data[0].num_ind_noprgdep}
-                        if (avancedep>=33.75){icono='🟢'}else if((avancedep<=22.50)){ (icono='🔴')}else {icono='🟠'}
+                        if (avancedep>=37.5){icono='🟢'}else if((avancedep<=25.00)){ (icono='🔴')}else {icono='🟠'}
                         console.log(avancedep);
                        bot.sendMessage(chatId, 
                             '\n% Avance Cuatrenial PDM <strong> '+avancedep+'%\nDesempeño:  '+icono+'</strong>'
