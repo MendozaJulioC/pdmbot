@@ -751,38 +751,29 @@ bot.onText(/\/proyecto (.+)/, (msg, match) => {
 bot.onText(/\/geoinversion/, function(msg, match){
     //  let plan = match[1];
     let chatId= msg.chat.id; 
+    let inversion=[];
     request(`https://sse-pdm.herokuapp.com/geo/api/territorio`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b>Inversión Pública en el Territorio</b>\nCorte Agosto 31 de 2021", {parse_mode:"HTML"})
             .then(function(msg){
                 var res=JSON.parse(body);
                 if(!error && response.statusCode==200){
-                  bot.sendMessage(chatId, 
-                    ' \nPopular <strong>'+formatter.format(res.data[0].popular)+'</strong>'
-                    + '\nSanta Cruz <strong> '+formatter.format(res.data[0].santa_cruz)+'</strong>'
-                    + '\nManrique <strong> '+formatter.format(res.data[0].manrique)+'</strong>'
-                    + '\nAranjuez <strong> '+formatter.format(res.data[0].aranjuez)+'</strong>'
-                   + '\nCastilla <strong> '+formatter.format(res.data[0].castilla)+'</strong>'
-            
-                  + '\nDoce de Octubre <strong> '+formatter.format(res.data[0].doce_de_octubre)+'</strong>'  
-                    + '\nRobledo <strong> '+formatter.format(res.data[0].robledo)+'</strong>'
-                    + '\nVilla Hermosa <strong> '+formatter.format(res.data[0].villa_hermosa)+'</strong>'
-                    + '\nBuenos Aires <strong> '+formatter.format(res.data[0].buenos_aires)+'</strong>'
-                    + '\nLa Candelaria <strong> '+formatter.format(res.data[0].la_candelaria)+'</strong>'
-                    + '\nLaureles-Estadio <strong> '+formatter.format(res.data[0].laureles_estadio)+'</strong>'
-                    + '\nLa América <strong> '+formatter.format(res.data[0].la_america)+'</strong>'
-                    + '\nSan Javier <strong> '+formatter.format(res.data[0].san_javier)+'</strong>'
-                    + '\nEl Poblado <strong> '+formatter.format(res.data[0].el_poblado)+'</strong>'
-                    + '\nGuayabal <strong> '+formatter.format(res.data[0].guayabal)+'</strong>'
-                    + '\nBelén <strong> '+formatter.format(res.data[0].belen)+'</strong>'
-               
-                    + '\nPalmitas <strong> '+formatter.format(res.data[0].palmitas)+'</strong>'
-                    + '\nSan Cristóbal <strong> '+formatter.format(res.data[0].san_cristobal)+'</strong>'
-                    + '\nAltavista <strong> '+formatter.format(res.data[0].altavista)+'</strong>'
-                    + '\nSan Antonio de Prado <strong> '+formatter.format(res.data[0].san_antonio)+'</strong>'
-                    + '\nSanta Elena <strong> '+formatter.format(res.data[0].santa_elena)+'</strong>'
+                    for (let index = 0; index < res.data.length; index++) {
+
+                        bot.sendMessage(chatId, 
+                            ' \nTerritorio <strong>'+(res.data[index].nom_comuna)+'</strong>'
+                            
+                            + '\nInversión Localizada : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
+                            + '\nInversión Ciudad : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
+                            + '\nPresupupuesto Participativo : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
+
+                           + '\nTotal : <strong> '+formatter.format(res.data[index].total)+'</strong>'
+                    
+                         
+                        
+                          ,{parse_mode:'HTML'})
+                    }
                 
-                  ,{parse_mode:'HTML'})
                   
                   
                 }        
