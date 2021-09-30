@@ -764,8 +764,8 @@ bot.onText(/\/geoinversion/, function(msg, match){
                             ' \nTerritorio <strong>'+(res.data[index].nom_comuna)+'</strong>'
                             
                             + '\nInversión Localizada : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
-                            + '\nInversión Ciudad : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
-                            + '\nPresupupuesto Participativo : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
+                            + '\nInversión Ciudad : <strong> '+formatter.format(res.data[index].ciudad)+'</strong>' 
+                            + '\nPresupupuesto Participativo : <strong> '+formatter.format(res.data[index].pp)+'</strong>' 
 
                            + '\nTotal : <strong> '+formatter.format(res.data[index].total)+'</strong>'
                     
