@@ -760,21 +760,45 @@ bot.onText(/\/geoinversion/, function(msg, match){
                 if(!error && response.statusCode==200){
                     for (let index = 0; index < res.data.length; index++) {
 
-                        bot.sendMessage(chatId, 
-                            ' \nTerritorio <strong>'+(res.data[index].nom_comuna)+'</strong>'
-                            
-                            + '\nInversión Localizada : <strong> '+formatter.format(res.data[index].localizada)+'</strong>' 
-                            + '\nInversión Ciudad : <strong> '+formatter.format(res.data[index].ciudad)+'</strong>' 
-                            + '\nPresupupuesto Participativo : <strong> '+formatter.format(res.data[index].pp)+'</strong>' 
+                            inversion.push({
+                                "codcomuna": res.data[index].cod_comuna,
+                                "nom_comuna": res.data[index].nom_comuna,
+                                "localizada":res.data[index].localizada,
+                                "ciudad": res.data[index].ciudad,
+                                "pp":res.data[index].pp,
+                                "total":res.data[index].total,
+                                "poblacion": res.data[index].poblacion
 
-                           + '\nTotal : <strong> '+formatter.format(res.data[index].total)+'</strong>'
-                    
-                         
-                        
-                          ,{parse_mode:'HTML'})
+                            })
+
                     }
+                    inversion.sort(function (a, b) {
+                        if (a.codcomuna > b.codcomuna) {
+                          return 1;
+                        }
+                        if (a.codcomuna < b.codcomuna) {
+                          return -1;
+                        }
+                        return 0;
+                      });
+                    console.log(inversion);
+
+                  for (let index = 0; index < inversion.length; index++) {
+                     
+                    bot.sendMessage(chatId, 
+                        ' \nTerritorio <strong>'+(inversion[index].nom_comuna)+'</strong>'
+                        + '\nInversión Localizada : <strong> '+formatter.format(inversion[index].localizada)+'</strong>' 
+                        + '\nInversión Ciudad : <strong> '+formatter.format(inversion[index].ciudad)+'</strong>' 
+                        + '\nPresupuesto Participativo : <strong> '+formatter.format(inversion[index].pp)+'</strong>' 
+                        + '\nTotal : <strong> '+formatter.format(inversion[index].total)+'</strong>'
+                        + '\n <strong>*************************</strong>'
+                        + '\nPoblación Territorio : <strong> '+(inversion[index].poblacion)+'</strong>'
                 
-                  
+                     
+                    
+                      ,{parse_mode:'HTML'})
+                      
+                  }
                   
                 }        
                 
