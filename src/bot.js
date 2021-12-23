@@ -6,7 +6,7 @@ const reload= require('reload')
 //const port= process.env.PORT;
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.token
+const token = process.env.token 
 const EventEmitter = require('events');
 const path = require('path');
 app.use(express.json());
@@ -61,9 +61,14 @@ liveReloadServer.server.once("connection",()=>{
     }, 3000)
 })
 
+
+
 bot.onText(/\/start/, (msg) => {
-    home(msg)
-   
+ 
+        home(msg)
+  
+
+  
  });
 
  async function home(msg){
@@ -72,9 +77,12 @@ bot.onText(/\/start/, (msg) => {
         {
             "keyboard": 
             [
-                ["Avance 🚀 "   , "Cumplimiento ✅", "Proyeccion 🥇"],   
-                ["Lineas📊 ", "Ejecución 🛠️", "Alertas 🚨"]
-               ,
+                ["Avance 🚀 "],   
+                ["Cumplimiento ✅"],
+                [ "Proyeccion 🥇"],
+                ["Lineas📊 "],
+                ["Ejecución 🛠️"]
+               
             ]
         }
     });
@@ -428,6 +436,7 @@ bot.on('message', (msg) => {
                     var avance=0
                     for (let index = 0; index < res.data.length; index++) {
                         avance= (parseFloat(res.data[index].avance)).toFixed(2)
+                        console.log(avance);
                         if (avance>=41.25){icono='🟢'
                             ordenaralto.push({
                                 "cod_dep": res.data[index].cod_dep,
