@@ -6,7 +6,7 @@ const reload= require('reload')
 //const port= process.env.PORT;
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.token 
+const token = process.env.token
 const EventEmitter = require('events');
 const path = require('path');
 app.use(express.json());
@@ -37,7 +37,7 @@ liveReloadServer.watch(__dirname + "/public");
 const  connectLiveReloadServer  = require('connect-livereload');
 app.use(connectLiveReloadServer());
 
-const cortebot ='Oct-31-2021'
+var cortebot =''
 const bot = new TelegramBot(token, {polling: true});
 bot.on("polling_error", console.log);
 
@@ -61,14 +61,8 @@ liveReloadServer.server.once("connection",()=>{
     }, 3000)
 })
 
-
-
-bot.onText(/\/start/, (msg) => {
- 
+bot.onText(/\/start/, (msg) => { 
         home(msg)
-  
-
-  
  });
 
  async function home(msg){
@@ -86,9 +80,7 @@ bot.onText(/\/start/, (msg) => {
             ]
         }
     });
-  
     onPhotoText(msg)
-    
  }
 
   function onPhotoText(msg) {
@@ -436,7 +428,7 @@ bot.on('message', (msg) => {
                     var avance=0
                     for (let index = 0; index < res.data.length; index++) {
                         avance= (parseFloat(res.data[index].avance)).toFixed(2)
-                        console.log(avance);
+                        //console.log(avance);
                         if (avance>=41.25){icono='🟢'
                             ordenaralto.push({
                                 "cod_dep": res.data[index].cod_dep,
@@ -554,15 +546,34 @@ bot.onText(/\/ejecutadolinea (.+)/, (msg, match) => {
   
 });
 
-bot.onText(/\/indicador (.+)/, (msg, match) => {
-  
 
+async function corteactual()
+{
+    try {
+        request(`https://sse-pdm.herokuapp.com/pi/api/avance/corte`, function(error,response, body){
+            if (!error && response.statusCode==200) {
+                let res=JSON.parse(body);
+                
+                cortebot= res.data[0].corte.substr(0,10)
+            
+              return cortebot
+              
+            }
+        })
+    } catch (error) {
+        console.error('Error corteactual: ', error);
+    }
+}
+
+
+
+bot.onText(/\/indicador (.+)/, (msg, match) => {
     try {
         const chatId = msg.chat.id;
         const resp = match[1]; // the captured "whatever"
-       
+       // https://sse-pdm.herokuapp.com/pi/api/avance/corte
         bot.sendMessage(msg.chat.id, "<b >Avance Indicador</b>", {parse_mode:"HTML"});
-        bot.sendMessage(msg.chat.id, "<b >Corte Oct-31-2021 </b>", {parse_mode:"HTML"});
+        bot.sendMessage(msg.chat.id, `<b>${cortebot}</b>`, {parse_mode:"HTML"});
         request(`https://sse-pdm.herokuapp.com/bot/api/indicador/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultado Indicador: </b>"+resp, {parse_mode:"HTML"})
@@ -587,13 +598,12 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
                             bot.sendMessage(chatId, "<b>El Indicador no existe en este Plan</b>", {parse_mode:"HTML"})
                         }
                     } )
-               
-             }
-         })
+            }
+        })
 
          
     } catch (error) {
-        console.error('Error :', error);
+        console.error('Error Indicador :', error);
         
     }
   
@@ -919,7 +929,7 @@ bot.onText(/\/dependencia (.+)/, (msg, match) => {
 
 
 
-
+corteactual()
 
 module.exports =app;
 // Listening
