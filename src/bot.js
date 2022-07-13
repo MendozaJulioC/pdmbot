@@ -63,6 +63,8 @@ liveReloadServer.server.once("connection",()=>{
 
 bot.onText(/\/start/, (msg) => { 
         home(msg)
+
+
  });
 
  async function home(msg){
@@ -87,14 +89,29 @@ bot.onText(/\/start/, (msg) => {
     // From file path
     const photo = `${__dirname}/res/guia.jpg`;
     bot.sendPhoto(msg.chat.id, photo, {
-      caption: "Hola!!!"
+        caption: `Hola!!`,
+
     });
+ // getChatMermber(msg)
   };
 
 
+  function getChatMermber(msg)
+  {
+     /* bot.getMe().then(function (info){
+          console.log(`
+          ${info.id} is ready, the username is @${info.username}
+          
+          `);
+      })
+
+      */
+  }
+
 
  
-var request= require('request')
+var request= require('request');
+const { getuid } = require('process');
  bot.onText(/\/avance/, function(message, match){
   //  let plan = match[1];
     let chatId= message.chat.id; 
@@ -553,11 +570,8 @@ async function corteactual()
         request(`https://sse-pdm.herokuapp.com/pi/api/avance/corte`, function(error,response, body){
             if (!error && response.statusCode==200) {
                 let res=JSON.parse(body);
-                
                 cortebot= res.data[0].corte.substr(0,10)
-            
-              return cortebot
-              
+                return cortebot
             }
         })
     } catch (error) {
@@ -781,7 +795,7 @@ bot.onText(/\/geoinversion/, function(msg, match){
 
                             inversion.push({
                                 "codcomuna": res.data[index].cod_comuna,
-                                "nom_comuna": res.data[index].nom_comuna,
+                                "nom_comuna": res.data[index].nombre,
                                 "localizada":res.data[index].localizada,
                                 "ciudad": res.data[index].ciudad,
                                 "pp":res.data[index].pp,
@@ -800,7 +814,7 @@ bot.onText(/\/geoinversion/, function(msg, match){
                         }
                         return 0;
                       });
-                    console.log(inversion);
+                   // console.log(inversion);
 
                   for (let index = 0; index < inversion.length; index++) {
                      
