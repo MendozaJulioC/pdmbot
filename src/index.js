@@ -10,7 +10,7 @@ const reload= require('reload')
 app.use(morgan('dev'));
 
 
-app.use(require('./routes/index'));
+//app.use(require('./routes/index'));
 
 
 //Star server
