@@ -6,7 +6,7 @@ const reload= require('reload')
 //const port= process.env.PORT;
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.token
+const token = process.env.tokendev
 const EventEmitter = require('events');
 const path = require('path');
 app.use(express.json());
@@ -115,7 +115,7 @@ const { getuid } = require('process');
  bot.onText(/\/avance/, function(message, match){
   //  let plan = match[1];
     let chatId= message.chat.id; 
-    request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"})
             .then(function(msg){
@@ -137,7 +137,7 @@ const { getuid } = require('process');
  bot.onText(/\/cumplimiento/, function(message, match){
     //  let plan = match[1];
     let chatId= message.chat.id; 
-    request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"})
             .then(function(msg){
@@ -162,7 +162,7 @@ bot.onText(/\/proyeccion/, function(message, match){
     //  let plan = match[1];
     let chatId= message.chat.id; 
     var ordenar=[]; let cortes=[];
-    request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b style='color:red'>Proyección</b>", {parse_mode:"HTML"})
             .then(function(msg){
@@ -187,7 +187,7 @@ bot.onText(/\/lineas/, function(message, match){
     //  let plan = match[1];
     let chatId= message.chat.id; 
     bot.sendMessage(msg.chat.id,`<b>Corte ${cortebot} </b>`, {parse_mode:"HTML"});   
-    request(`https://sse-pdm.herokuapp.com/pi/api/total-avance-lineas`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/pi/api/total-avance-lineas`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b>Lineas PDM</b>", {parse_mode:"HTML"})
             .then(function(msg){
@@ -211,7 +211,7 @@ bot.onText(/\/lineas/, function(message, match){
 bot.onText(/\/ejecucion/, function(msg, match){
     //  let plan = match[1];
     let chatId= msg.chat.id; 
-    request(`https://sse-pdm.herokuapp.com/pa/api/avancefinanciero`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/pa/api/avancefinanciero`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, "<b>Finanzas Proyectos de Inversión</b>", {parse_mode:"HTML"})
             .then(function(msg){
@@ -257,7 +257,7 @@ bot.on('message', (msg) => {
     if (msg.text.indexOf(avance) === 0) {
         bot.sendMessage(msg.chat.id,"<b>Avance</b>", {parse_mode:"HTML"});
         let chatId= msg.chat.id; 
-        request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultados</b>", {parse_mode:"HTML"})
                 .then(function(msg){
@@ -294,7 +294,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.chat.id, "<b>Cumplimiento</b>", {parse_mode:"HTML"});
 
         let chatId= msg.chat.id; 
-        request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"})
                 .then(function(msg){
@@ -328,7 +328,7 @@ bot.on('message', (msg) => {
     if (msg.text.indexOf(linea) ===0 ) {
         bot.sendMessage(msg.chat.id, "<b style='color:red'>Avance Líneas</b>", {parse_mode:"HTML"});
         let chatId= msg.chat.id; 
-        request(`https://sse-pdm.herokuapp.com/pi/api/total-avance-lineas`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/total-avance-lineas`, function(error, response,body){
             if(!error && response.statusCode==200){ bot.sendMessage(chatId, `<b>Corte ${cortebot} </b>`, {parse_mode:"HTML"})
                 .then(function(msg){
                     var res=JSON.parse(body);
@@ -356,7 +356,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.chat.id, "<b style='color:red'>Resultados</b>", {parse_mode:"HTML"});
         let chatId= msg.chat.id; 
         var ordenar=[]; let cortes=[];
-        request(`https://sse-pdm.herokuapp.com/pi/api/generalpi`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/generalpi`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b style='color:red'>Proyección</b>", {parse_mode:"HTML"})
                 .then(function(msg){
@@ -384,7 +384,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.chat.id, "<b>Resultados</b>", {parse_mode:"HTML"});
         bot.sendMessage(msg.chat.id,`<b>Corte ${cortebot} </b>`, {parse_mode:"HTML"});   
         let chatId= msg.chat.id; 
-        request(`https://sse-pdm.herokuapp.com/pa/api/avancefinanciero`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pa/api/avancefinanciero`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Finanzas Proyectos de Inversión</b>", {parse_mode:"HTML"})
                 .then(function(msg){
@@ -435,7 +435,7 @@ bot.on('message', (msg) => {
     if (msg.text.indexOf(alto)===0) {
         bot.sendMessage(msg.chat.id,"<b>Dependencias Desempeño Alto </b>", {parse_mode:"HTML"});  
         bot.sendMessage(msg.chat.id,`<b>Corte ${cortebot} </b>`, {parse_mode:"HTML"});   
-        request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                let ordenaralto=[]
                 bot.sendMessage(chatId, "<b>Alerta Avances Dep: </b>" , {parse_mode:"HTML"})
@@ -473,7 +473,7 @@ bot.on('message', (msg) => {
     if (msg.text.indexOf(medio)===0) {
         bot.sendMessage(msg.chat.id,"<b>Dependencias Desempeño Medio </b>", {parse_mode:"HTML"});
         bot.sendMessage(msg.chat.id,`<b>Corte ${cortebot} </b>`, {parse_mode:"HTML"});   
-        request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                 let ordenarmedio=[]
                 bot.sendMessage(chatId, "<b>Alerta Avances Dep: </b>" , {parse_mode:"HTML"})
@@ -513,7 +513,7 @@ bot.on('message', (msg) => {
     var bajo="Bajo";
     if (msg.text.indexOf(bajo)===0) {
         bot.sendMessage(msg.chat.id,"<b>Dependencias Desempeño Bajo </b>", {parse_mode:"HTML"});  
-        request(`https://sse-pdm.herokuapp.com/pi/api/semaforo-corte/alertas`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/semaforo-corte/alertas`, function(error, response,body){
             if(!error && response.statusCode==200){
                 let ordenarbajo=[]
                 bot.sendMessage(chatId, "<b>Alerta Avances Dep: </b>" , {parse_mode:"HTML"})
@@ -567,7 +567,7 @@ bot.onText(/\/ejecutadolinea (.+)/, (msg, match) => {
 async function corteactual()
 {
     try {
-        request(`https://sse-pdm.herokuapp.com/pi/api/avance/corte`, function(error,response, body){
+        request(`https://api.avanzamedellin.info/pi/api/avance/corte`, function(error,response, body){
             if (!error && response.statusCode==200) {
                 let res=JSON.parse(body);
                 cortebot= res.data[0].corte.substr(0,10)
@@ -585,10 +585,10 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
     try {
         const chatId = msg.chat.id;
         const resp = match[1]; // the captured "whatever"
-       // https://sse-pdm.herokuapp.com/pi/api/avance/corte
+       // https://api.avanzamedellin.info/pi/api/avance/corte
         bot.sendMessage(msg.chat.id, "<b >Avance Indicador</b>", {parse_mode:"HTML"});
         bot.sendMessage(msg.chat.id, `<b>${cortebot}</b>`, {parse_mode:"HTML"});
-        request(`https://sse-pdm.herokuapp.com/bot/api/indicador/${resp}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/bot/api/indicador/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultado Indicador: </b>"+resp, {parse_mode:"HTML"})
                     .then(function(msg){
@@ -627,7 +627,7 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
 async function ejecucionlinea (linea, chatId, resp){
     try {
       
-        request(`https://sse-pdm.herokuapp.com/pi/api/line/financiera/${linea}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/pi/api/line/financiera/${linea}`, function(error, response,body){
             if(!error && response.statusCode==200){
                
                     bot.sendMessage(chatId, "<b>Finanzas Línea: </b>"+resp, {parse_mode:"HTML"})
@@ -674,7 +674,7 @@ bot.onText(/\/valstat (.+)/, (msg, match) => {
         const resp = (match[1]); // the captured "whatever"
        //resp.toUpperCase()
         bot.sendMessage(msg.chat.id, "<b style='color:red'>Valor Estadístico</b>", {parse_mode:"HTML"});
-        request(`https://sse-pdm.herokuapp.com/bot/api/valorestadistico/${resp.toUpperCase()}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/bot/api/valorestadistico/${resp.toUpperCase()}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultado encontrado para : </b>"+resp, {parse_mode:"HTML"})
                     .then(function(msg){
@@ -729,7 +729,7 @@ bot.onText(/\/proyecto (.+)/, (msg, match) => {
         const resp = match[1]; // the captured "whatever"
        
         bot.sendMessage(msg.chat.id, "<b>Proyecto</b>", {parse_mode:"HTML"});
-        request(`https://sse-pdm.herokuapp.com/bot/api/proyecto/${resp}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/bot/api/proyecto/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Resultado encontrado para : </b>"+resp, {parse_mode:"HTML"})
                     .then(function(msg){
@@ -785,7 +785,7 @@ bot.onText(/\/geoinversion/, function(msg, match){
     //  let plan = match[1];
     let chatId= msg.chat.id; 
     let inversion=[];
-    request(`https://sse-pdm.herokuapp.com/geo/api/territorio`, function(error, response,body){
+    request(`https://api.avanzamedellin.info/geo/api/territorio`, function(error, response,body){
         if(!error && response.statusCode==200){
             bot.sendMessage(chatId, `<b>Inversión Pública en el Territorio</b>\nCorte ${cortebot}`, {parse_mode:"HTML"})
             .then(function(msg){
@@ -848,7 +848,7 @@ bot.onText(/\/invercomuna (.+)/, (msg, match) => {
         const chatId = msg.chat.id;
         const resp = match[1]; // the captured "whatever"
        
-        request(`https://sse-pdm.herokuapp.com/bot/api/territorio/${resp}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/bot/api/territorio/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "<b>Tipo inversión : </b>", {parse_mode:"HTML"})
                 .then(function(msg){                       var res=JSON.parse(body);
@@ -878,7 +878,7 @@ bot.onText(/\/dependencia (.+)/, (msg, match) => {
         const resp = match[1]; // the captured "whatever"
        let avancedep=0; let icono='';
        let porc_fisico=0; let porc_ejecucion=0;let noprg=0;
-        request(`https://sse-pdm.herokuapp.com/bot/api/dependencias/${resp}`, function(error, response,body){
+        request(`https://api.avanzamedellin.info/bot/api/dependencias/${resp}`, function(error, response,body){
             if(!error && response.statusCode==200){
                 bot.sendMessage(chatId, "Resultado", {parse_mode:"HTML"})
                 .then(function(msg){
