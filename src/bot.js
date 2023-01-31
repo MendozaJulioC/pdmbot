@@ -6,7 +6,7 @@ const reload= require('reload')
 //const port= process.env.PORT;
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.tokendev
+const token = process.env.AWS_TOKENDEV
 const EventEmitter = require('events');
 const path = require('path');
 app.use(express.json());
@@ -949,7 +949,7 @@ module.exports =app;
 // Listening
 
 const server = http.createServer(app)
-server.listen(process.env.PORT||7800,()=>console.log('Servidor activo...'))
+server.listen(process.env.AWS_PORT||7800,()=>console.log('Servidor activo...'))
 reload(app)
   
 
