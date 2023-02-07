@@ -46,6 +46,7 @@ bot.on("polling_error", console.log);
 bot.on('message', (message) => {
   const chatId = message.chat.id;
   // send a message to the chat acknowledging receipt of their message
+  //probando el repositorio actual
   bot.sendMessage(chatId, 'Received your message');
 });
 */
