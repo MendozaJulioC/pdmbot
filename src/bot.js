@@ -6,7 +6,7 @@ const reload= require('reload')
 //const port= process.env.PORT;
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = process.env.AWS_TOKENDEV
+const token = process.env.AWS_TOKEN
 const EventEmitter = require('events');
 const path = require('path');
 app.use(express.json());
