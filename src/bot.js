@@ -599,15 +599,22 @@ bot.onText(/\/indicador (.+)/, (msg, match) => {
                             let avanceIndicador= (parseFloat(res.data[0].avance_cuatrienio)*100).toFixed(2)
                             if(res.data[0].semafav==1){ alerta='🔴'}else if(res.data[0].semafav==3){alerta='🟢'}else if(res.data[0].semafav==2){alerta='🟠'}else{alerta='🔵'}
                             bot.sendMessage(chatId, 
-                                '\nIndicador <strong> '+res.data[0].nom_indicador+ '</strong>'
-                                +'\n<strong>Definición:</strong>\n '+res.data[0].defincion
-                                +'\nMeta Plan <strong> '+res.data[0].meta_plan+'</strong>'
-                                +'\nUnidad<strong> '+res.data[0].unidad+'</strong>'
-                                +'\nLB<strong> '+res.data[0].lb_ind+'</strong>'
-                                +'\nResponsable<strong> '+res.data[0].responsable_plan+'</strong>'
-                                +'\nObs. Seguimiento<strong> '+res.data[0].observaciones+'</strong>'
-                                +'\nAvance Indicador <strong> '+avanceIndicador+'%</strong>'
-                                +'\nDesempeño <strong> '+alerta+'</strong>'
+                                '\nIndicador: <strong> '+res.data[0].nom_indicador+ '</strong>'
+                                +'\n'
+                                +'\n<strong>Definición:</strong>\n '+res.data[0].definicion
+                                +'\n'
+                                +'\nMeta Plan: <strong> '+res.data[0].meta_plan+'</strong>'
+                                +'\nUnidad: <strong> '+res.data[0].unidad+'</strong>'
+                                +'\nLB: <strong> '+res.data[0].lb_ind+'</strong>'
+                                +'\nResponsable:<strong> '+res.data[0].responsable_plan+'</strong>'
+                                +'\nResponsable Reporte:<strong> '+res.data[0].responsable_plan+'</strong>'
+                                +'\n'
+                                +'\nObservaciones Seguimiento: <strong> '+res.data[0].observaciones_indicador+'</strong>'
+                                +'\n<strong>***********************************</strong>'
+                                +'\nAvance Indicador: <strong> '+avanceIndicador+'%</strong>'
+                                +'\nDesempeño: <strong> '+alerta+'</strong>'
+                                +'\n<strong>***********************************</strong>'
+                                +'\nObservación Ficha Metodológica  Indicador : <strong> '+res.data[0].observaciones+'</strong>'
                                 , {parse_mode:'HTML'}) 
                         }else{
                             bot.sendMessage(chatId, "<b>El Indicador no existe en este Plan</b>", {parse_mode:"HTML"})
